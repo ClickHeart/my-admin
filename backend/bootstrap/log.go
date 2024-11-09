@@ -1,48 +1,55 @@
 package bootstrap
 
 import (
+	"naive-backend/util/config"
 	"strings"
 
 	"github.com/donnie4w/go-logger/logger"
 )
 
-func LogInit(level string) {
+func LogInit(cfg config.Log) {
 	attrformat := &logger.AttrFormat{
-		SetBodyFmt: func(l logger.LEVELTYPE, bs []byte) []byte {
-			//处理日志末尾换行符
-			if size := len(bs); bs[size-1] == '\n' {
-				bs = append(bs[:size-1], []byte("\x1b[0m\n")...)
-			} else {
-				bs = append(bs, []byte("\x1b[0m\n")...)
-			}
-			switch l {
-			case logger.LEVEL_DEBUG:
-				return append([]byte("\x1b[34m"), bs...)
-			case logger.LEVEL_INFO:
-				return append([]byte("\x1b[32m"), bs...)
-			case logger.LEVEL_WARN:
-				return append([]byte("\x1b[33m"), bs...)
-			case logger.LEVEL_ERROR:
-				return append([]byte("\x1b[31m"), bs...)
-			case logger.LEVEL_FATAL:
-				return append([]byte("\x1b[41m"), bs...)
-			default:
-				return bs
-			}
-		},
+		SetBodyFmt: colorFmt,
 	}
-	logger.SetOption(&logger.Option{
-		Level:      getLevel(level),
+	option := &logger.Option{
+		Level:      getLevel(cfg.Level),
 		AttrFormat: attrformat,
 		Console:    true,
 		Stacktrace: logger.LEVEL_WARN,
-		FileOption: &logger.FileTimeMode{
-			Filename:   "log/naive_admin.log",
+	}
+	if cfg.File.Enable {
+		fileMode := &logger.FileTimeMode{
+			Filename:   cfg.File.Path,
 			Maxbuckup:  3,
 			IsCompress: false,
 			Timemode:   logger.MODE_MONTH,
-		},
-	})
+		}
+		option.FileOption = fileMode
+	}
+	logger.SetOption(option)
+}
+
+func colorFmt(level logger.LEVELTYPE, bs []byte) []byte {
+	//处理日志末尾换行符
+	if size := len(bs); bs[size-1] == '\n' {
+		bs = append(bs[:size-1], []byte("\x1b[0m\n")...)
+	} else {
+		bs = append(bs, []byte("\x1b[0m\n")...)
+	}
+	switch level {
+	case logger.LEVEL_DEBUG:
+		return append([]byte("\x1b[34m"), bs...)
+	case logger.LEVEL_INFO:
+		return append([]byte("\x1b[32m"), bs...)
+	case logger.LEVEL_WARN:
+		return append([]byte("\x1b[33m"), bs...)
+	case logger.LEVEL_ERROR:
+		return append([]byte("\x1b[31m"), bs...)
+	case logger.LEVEL_FATAL:
+		return append([]byte("\x1b[41m"), bs...)
+	default:
+		return bs
+	}
 }
 
 func getLevel(level string) (l logger.LEVELTYPE) {

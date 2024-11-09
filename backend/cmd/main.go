@@ -2,13 +2,16 @@ package main
 
 import (
 	"naive-backend/bootstrap"
+	"naive-backend/global"
 
 	"github.com/donnie4w/go-logger/logger"
 )
 
 func main() {
-	level := "debug"
-	bootstrap.LogInit(level)
+	if err := bootstrap.ConfigInit(); err != nil {
+		return
+	}
+	bootstrap.LogInit(global.Cfg.Log)
 	logger.Debug("this is a debug message")
 	logger.Info("this is an info message")
 	logger.Warn("this is a warning message")

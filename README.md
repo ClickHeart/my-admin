@@ -1,2 +1,2 @@
-# naive-admin
+# my-admin
 my navie admin

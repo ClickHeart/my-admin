@@ -1,13 +1,13 @@
-package bootstrap
+package mlog
 
 import (
-	"naive-backend/util/config"
+	"my-admin/pkg/config"
 	"strings"
 
 	"github.com/donnie4w/go-logger/logger"
 )
 
-func LogInit(cfg config.Log) {
+func Init(cfg *config.Log) {
 	attrformat := &logger.AttrFormat{
 		SetBodyFmt: colorFmt,
 	}

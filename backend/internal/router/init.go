@@ -9,9 +9,9 @@ import (
 )
 
 func Init(g *gin.Engine) {
-	r := g.Group("v1")
-	r.Use(sessions.Sessions("mysession", cookie.NewStore([]byte("captch"))))
-	r.Use(middleware.Cors())
+	apiV1 := g.Group("v1")
+	apiV1.Use(sessions.Sessions("mysession", cookie.NewStore([]byte("captch"))))
+	apiV1.Use(middleware.Cors())
 
-	NewAuthRouter(r)
+	WithAuthRouter(apiV1)
 }

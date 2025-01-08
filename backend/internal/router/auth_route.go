@@ -6,7 +6,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func NewAuthRouter(r *gin.RouterGroup) {
+func WithAuthRouter(r *gin.RouterGroup) *gin.RouterGroup {
 	auth := r.Group("/auth")
 	auth.GET("/login", api.Auth.Login)
+	return auth
 }

@@ -3,18 +3,18 @@ package global
 import (
 	"my-admin/pkg/config"
 	"my-admin/pkg/db"
-	"my-admin/pkg/mlog"
+	"my-admin/pkg/log"
 
 	"gorm.io/gorm"
 )
 
 var (
 	Cfg *config.Config
-	Db  *gorm.DB
+	DB  *gorm.DB
 )
 
 func init() {
 	Cfg = config.Init()
-	mlog.Init(&Cfg.Log)
-	Db = db.PgsqlInit(&Cfg.Data.Pgsql)
+	log.Init(&Cfg.Log)
+	DB = db.PgsqlInit(&Cfg.Data.Pgsql)
 }

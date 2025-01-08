@@ -1,6 +1,7 @@
 package model
 
 import (
+	"my-admin/internal/global"
 	"time"
 )
 
@@ -15,4 +16,12 @@ type User struct {
 
 func (User) TableName() string {
 	return "user"
+}
+
+func (u *User) GetUser() (user User, err error) {
+	err = global.DB.Model(u).
+		Where("username =? ", u.Username).
+		Where("password=?", u.Password).
+		Find(&user).Error
+	return
 }
